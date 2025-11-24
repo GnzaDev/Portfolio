@@ -3,23 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logov2.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gonzalo - Developer</title>
-    <meta name="description" content="Portfolio de Gonzalo, Computer Engineer y Software Developer especializado en desarrollo full-stack y soluciones innovadoras." />
-    <meta name="keywords" content="Gonzalo, computer engineer, developer, portfolio, full-stack, React, Node.js" />
-    <meta name="author" content="Gonzalo" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111827" />
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Gonzalo - Computer Engineer & Developer" />
-    <meta property="og:description" content="Portfolio profesional de Gonzalo, especializado en desarrollo full-stack y soluciones tecnológicas innovadoras." />
+    <!-- Primary Meta Tags -->
+    <title>Gonzalo Bustamante - Ingeniero en Computación | Portfolio</title>
+    <meta name="title" content="Gonzalo Bustamante - Ingeniero en Computación | Portfolio" />
+    <meta name="description" content="Portfolio profesional de Gonzalo Bustamante, Ingeniero en Computación especializado en desarrollo Frontend, React, Next.js, React Native y soluciones full-stack innovadoras." />
+    <meta name="keywords" content="Gonzalo Bustamante, ingeniero computación, desarrollador frontend, React, Next.js, React Native, portfolio, full-stack developer, Chile, Firebase, Supabase" />
+    <meta name="author" content="Gonzalo Bustamante" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gonzalo-portfolio.vercel.app/" />
+    <meta property="og:title" content="Gonzalo Bustamante - Ingeniero en Computación | Portfolio" />
+    <meta property="og:description" content="Portfolio profesional de Gonzalo Bustamante, especializado en desarrollo Frontend con React, Next.js y React Native." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:locale" content="es_CL" />
     
-    <!-- Preload Critical Fonts -->
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://gonzalo-portfolio.vercel.app/" />
+    <meta property="twitter:title" content="Gonzalo Bustamante - Ingeniero en Computación" />
+    <meta property="twitter:description" content="Portfolio profesional de Gonzalo Bustamante, especializado en desarrollo Frontend." />
+    <meta property="twitter:image" content="/og-image.png" />
+    
+    <!-- Preload Critical Resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Gonzalo Bustamante",
+      "jobTitle": "Ingeniero en Computación",
+      "description": "Desarrollador Frontend especializado en React, Next.js y React Native",
+      "url": "https://gonzalo-portfolio.vercel.app/",
+      "sameAs": [
+        "https://github.com/GnzaDev"
+      ],
+      "knowsAbout": ["React", "Next.js", "React Native", "JavaScript", "TypeScript", "Firebase", "Supabase"],
+      "alumniOf": {
+        "@type": "Organization",
+        "name": "Universidad de Chile"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <noscript>
+      <div style="text-align: center; padding: 2rem; font-family: monospace;">
+        <h1>Gonzalo Bustamante - Portfolio</h1>
+        <p>Este sitio requiere JavaScript para funcionar correctamente.</p>
+        <p>Por favor, habilita JavaScript en tu navegador.</p>
+      </div>
+    </noscript>
   </body>
 </html>

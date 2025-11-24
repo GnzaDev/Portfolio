@@ -22,9 +22,13 @@ body {
   box-shadow: 
     0 0 0 2px #e5e7eb,
     0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    /* Sombra 3D extruida - siempre visible */
+    8px 8px 0 #e5e7eb,
+    12px 12px 0 #d1d5db;
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .retro-terminal::before {
@@ -36,6 +40,7 @@ body {
   height: 30px;
   background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
   border-radius: 8px 8px 0 0;
+  z-index: 2;
 }
 
 .retro-terminal::after {
@@ -50,6 +55,18 @@ body {
   box-shadow: 
     20px 0 0 #f59e0b,
     40px 0 0 #10b981;
+  z-index: 3;
+}
+
+.retro-terminal:hover {
+  box-shadow: 
+    0 0 0 2px #e5e7eb,
+    0 10px 40px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    /* Sombra 3D ligeramente más pronunciada */
+    10px 10px 0 #e5e7eb,
+    14px 14px 0 #d1d5db;
+  transform: translateY(-2px);
 }
 
 /* Retro Card Style */
@@ -59,18 +76,52 @@ body {
   border-radius: 8px;
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    /* Sombra 3D extruida - siempre visible */
+    6px 6px 0 #e5e7eb,
+    8px 8px 0 #d1d5db;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
+/* Efecto de escaneo CRT sutil - siempre activo */
+.retro-card::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: scan-line 6s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .retro-card:hover {
   border-color: #1f2937;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 6px 24px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    /* Sombra 3D ligeramente más pronunciada */
+    7px 7px 0 #e5e7eb,
+    10px 10px 0 #d1d5db;
   transform: translateY(-2px);
+}
+
+@keyframes scan-line {
+  0% {
+    top: -100%;
+  }
+  100% {
+    top: 100%;
+  }
 }
 
 /* Retro Button Style */
@@ -199,48 +250,129 @@ body {
   pointer-events: none;
 }
 
+/* Performance Optimizations */
+.retro-terminal,
+.retro-card,
+.retro-button {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .retro-terminal,
+  .retro-card {
+    background-size: 15px 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .retro-terminal {
-    margin: 0 10px;
+    margin: 0 8px;
     border-width: 3px;
+    padding: 1.5rem !important;
   }
   
   .retro-terminal::before {
-    height: 25px;
+    height: 24px;
   }
   
   .retro-terminal::after {
     top: 6px;
     left: 10px;
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     box-shadow: 
-      16px 0 0 #f59e0b,
-      32px 0 0 #10b981;
+      15px 0 0 #f59e0b,
+      30px 0 0 #10b981;
+  }
+  
+  .retro-card {
+    padding: 1rem !important;
   }
   
   .text-6xl {
-    font-size: 3rem;
+    font-size: 2.75rem;
+    line-height: 1.1;
   }
   
   .text-8xl {
-    font-size: 4rem;
+    font-size: 3.5rem;
+    line-height: 1.1;
+  }
+  
+  /* Improve touch targets */
+  .retro-button,
+  a.retro-card {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .retro-terminal {
+    border-width: 2px;
+    padding: 1rem !important;
+  }
+  
+  .retro-terminal::before {
+    height: 20px;
+  }
+  
+  .retro-terminal::after {
+    top: 5px;
+    left: 8px;
+    width: 8px;
+    height: 8px;
+    box-shadow: 
+      14px 0 0 #f59e0b,
+      28px 0 0 #10b981;
   }
 }
 
 @media (max-width: 480px) {
   .text-6xl {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
+    line-height: 1.1;
   }
   
   .text-8xl {
-    font-size: 3rem;
+    font-size: 2.75rem;
+    line-height: 1.1;
   }
   
   .retro-button {
-    padding: 12px 24px;
-    font-size: 14px;
+    padding: 10px 20px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  
+  .retro-card {
+    border-width: 2px;
+  }
+  
+  /* Reduce animations on small screens for performance */
+  .retro-terminal,
+  .retro-card {
+    background-size: 12px 12px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+  .hero-section {
+    min-height: auto;
+    padding: 3rem 1rem;
+  }
+  
+  section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
   }
 }
 
@@ -287,9 +419,58 @@ html {
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Loading State */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navbar smooth scroll offset */
+html {
+  scroll-padding-top: 80px;
+}
+
+/* Focus visible for better keyboard navigation */
+*:focus-visible {
+  outline: 3px solid #6b7280;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Better link focus states */
+a:focus-visible {
+  outline: 3px solid #374151;
+  outline-offset: 3px;
+}
+
+/* Improve contrast for better readability */
+@media (prefers-contrast: more) {
+  .text-gray-600 {
+    color: #4b5563 !important;
+  }
+  
+  .text-gray-700 {
+    color: #374151 !important;
+  }
+  
+  .retro-terminal,
+  .retro-card {
+    border-width: 3px;
+    border-color: #000;
   }
 }
