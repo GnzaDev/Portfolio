@@ -181,9 +181,9 @@ export const socialLinks = {
 };
 
 export const navLinks = [
-  { href: '#about-title', label: 'ABOUT' },
-  { href: '#skills-title', label: 'SKILLS' },
-  { href: '#experience-title', label: 'EXPERIENCE' },
-  { href: '#projects-section', label: 'PROJECTS' },
-  { href: '#connect-title', label: 'CONTACT' },
+  { href: '#about', label: 'ABOUT' },
+  { href: '#skills', label: 'SKILLS' },
+  { href: '#experience', label: 'EXPERIENCE' },
+  { href: '#projects', label: 'PROJECTS' },
+  { href: '#contact', label: 'CONTACT' },
 ];

@@ -54,7 +54,7 @@ export const HeroSection = () => {
 
         <motion.div className="flex flex-wrap gap-3 md:gap-4">
           <motion.a
-            href="#projects-section"
+            href="#projects"
             className="retro-button bg-gray-900 hover:bg-gray-800 text-white px-6 sm:px-8 py-2.5 sm:py-3 font-bold tracking-wide text-sm sm:text-base"
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.99 }}
@@ -64,7 +64,7 @@ export const HeroSection = () => {
             VER PROYECTOS
           </motion.a>
           <motion.a
-            href="#connect-title"
+            href="#contact"
             className="retro-button bg-transparent border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 font-bold tracking-wide text-sm sm:text-base"
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.99 }}

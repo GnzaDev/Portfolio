@@ -1,0 +1,49 @@
+/* Scrollbar personalizado estilo retro/terminal */
+
+/* Para navegadores Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-left: 2px solid #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border: 2px solid #e2e8f0;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #111827;
+}
+
+::-webkit-scrollbar-corner {
+  background: #e2e8f0;
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1f2937 #e2e8f0;
+}
+
+/* Smooth scroll nativo mejorado */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Opcional: efecto de "snap" suave en secciones */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

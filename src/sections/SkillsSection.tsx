@@ -14,14 +14,22 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 30, opacity: 0 },
+  hidden: { 
+    y: 50, 
+    opacity: 0,
+    scale: 0.95,
+    filter: 'blur(8px)'
+  },
   visible: {
     y: 0,
     opacity: 1,
+    scale: 1,
+    filter: 'blur(0px)',
     transition: {
       type: 'spring' as const,
       stiffness: 80,
-      damping: 12
+      damping: 12,
+      duration: 0.8
     }
   }
 };
@@ -35,6 +43,7 @@ const iconMap: Record<string, any> = {
 export const SkillsSection = () => {
   return (
     <motion.section
+      id="skills"
       className="skills-section py-12 sm:py-16 md:py-20 px-4"
       initial="hidden"
       whileInView="visible"
