@@ -13,7 +13,7 @@ export const personalInfo = {
 
 export const about = {
   description: `Egresado de Técnico Analista Programador (2023-2024).
-Actualmente cursando 3° año de Ingeniería Informática en INACAP.
+Actualmente cursando 4° año de Ingeniería Informática en INACAP.
 Apasionado por el desarrollo Frontend y las tecnologías modernas.
 Explorando React Native y Expo para aplicaciones móviles.
 Aprendiendo desarrollo Backend para ser un desarrollador full-stack.
@@ -98,11 +98,12 @@ export const projects = [
     repo: "https://github.com/GnzaDev/Farmacias-APP-Chile"
   },
   {
-    title: "ForumSpace",
-    description: "Foro web desarrollado con Django y MySQL. Permite a los usuarios crear temas, responder, gestionar perfiles y explorar discusiones en una plataforma sencilla y funcional.",
-    tech: ["Django", "MySQL", "Python", "HTML"],
-    status: "ACTIVO",
-    repo: "https://github.com/GnzaDev/ForumSpace-django-mysql"
+    title: "Tinkay",
+    description: "Sistema de venta de servicios de belleza, con sistema de pagos con mercadopago y notificaciones",
+    tech: ["Nextjs", "Supabase", "Tailwind CSS", "Mercadopago"],
+    status: "PRIVATE",
+    repo: "https://github.com/GnzaDev/tinkay-mercadopago",
+    demo: "https://tinkay.cl"
   },
   {
     title: "StreamBot Discord",

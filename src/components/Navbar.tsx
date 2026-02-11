@@ -10,28 +10,36 @@ export const Navbar = () => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (navRef.current) {
-      // Animación de entrada del navbar
-      gsap.fromTo(
-        navRef.current,
-        { y: -100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 2 }
-      );
-    }
+    const ctx = gsap.context(() => {
+      if (navRef.current) {
+        // Animación de entrada del navbar
+        gsap.fromTo(
+          navRef.current,
+          { y: -100, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 2 }
+        );
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   useEffect(() => {
-    if (menuRef.current) {
-      if (isOpen) {
-        gsap.fromTo(
-          menuRef.current,
-          { height: 0, opacity: 0 },
-          { height: 'auto', opacity: 1, duration: 0.4, ease: 'power2.out' }
-        );
-      } else {
-        gsap.to(menuRef.current, { height: 0, opacity: 0, duration: 0.3, ease: 'power2.in' });
+    const ctx = gsap.context(() => {
+      if (menuRef.current) {
+        if (isOpen) {
+          gsap.fromTo(
+            menuRef.current,
+            { height: 0, opacity: 0 },
+            { height: 'auto', opacity: 1, duration: 0.4, ease: 'power2.out' }
+          );
+        } else {
+          gsap.to(menuRef.current, { height: 0, opacity: 0, duration: 0.3, ease: 'power2.in' });
+        }
       }
-    }
+    });
+
+    return () => ctx.revert();
   }, [isOpen]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

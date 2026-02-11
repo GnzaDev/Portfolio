@@ -9,13 +9,13 @@ gsap.registerPlugin(ScrollTrigger, SplitText, ScrollToPlugin);
 
 // Componentes
 import { Navbar, ScrollToTop, LoadingSpinner } from './components';
-import { 
-  HeroSection, 
-  AboutSection, 
-  SkillsSection, 
-  ExperienceSection, 
-  ProjectsSection, 
-  ContactSection 
+import {
+  HeroSection,
+  AboutSection,
+  SkillsSection,
+  ExperienceSection,
+  ProjectsSection,
+  ContactSection
 } from './sections';
 
 // Fondo retro animado con drift + noise
@@ -24,32 +24,36 @@ const GridRetroBackground = () => {
   const noiseRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    // Animación de drift del grid
-    if (gridRef.current) {
-      gsap.to(gridRef.current, {
-        backgroundPosition: '40px 40px',
-        duration: 20,
-        repeat: -1,
-        ease: 'none',
-      });
-    }
+    const ctx = gsap.context(() => {
+      // Animación de drift del grid
+      if (gridRef.current) {
+        gsap.to(gridRef.current, {
+          backgroundPosition: '40px 40px',
+          duration: 20,
+          repeat: -1,
+          ease: 'none',
+        });
+      }
 
-    // Animación de noise
-    if (noiseRef.current) {
-      gsap.to(noiseRef.current, {
-        opacity: 0.02,
-        duration: 0.1,
-        repeat: -1,
-        yoyo: true,
-        ease: 'steps(2)',
-      });
-    }
+      // Animación de noise
+      if (noiseRef.current) {
+        gsap.to(noiseRef.current, {
+          opacity: 0.02,
+          duration: 0.1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'steps(2)',
+        });
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <div className="fixed inset-0 -z-20">
       {/* Grid base animado */}
-      <div 
+      <div
         ref={gridRef}
         className="absolute inset-0"
         style={{
@@ -62,9 +66,9 @@ const GridRetroBackground = () => {
           backgroundPosition: '0 0',
         }}
       />
-      
+
       {/* Noise texture */}
-      <div 
+      <div
         ref={noiseRef}
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -72,18 +76,18 @@ const GridRetroBackground = () => {
           opacity: 0.03,
         }}
       />
-      
+
       {/* Scanlines CRT */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, transparent 1px, transparent 2px)',
           backgroundSize: '100% 2px',
         }}
       />
-      
+
       {/* Vignette */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: 'radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.08) 100%)',
@@ -122,6 +126,7 @@ function App() {
 
       {/* Navbar */}
       <Navbar />
+
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

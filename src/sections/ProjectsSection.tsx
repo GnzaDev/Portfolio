@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion, Variants } from 'framer-motion';
-import gsap from 'gsap';
+import { motion, Variants, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { projects } from '../data/portfolio';
 
 const containerVariants: Variants = {
@@ -15,8 +14,8 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { 
-    y: 50, 
+  hidden: {
+    y: 50,
     opacity: 0,
     scale: 0.95,
     filter: 'blur(8px)'
@@ -34,6 +33,16 @@ const itemVariants: Variants = {
     }
   }
 };
+
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  status: string;
+  demo?: string;
+  repo?: string;
+  featured?: boolean;
+}
 
 export const ProjectsSection = () => {
   return (
@@ -58,7 +67,7 @@ export const ProjectsSection = () => {
 
         <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {projects.map((project) => (
-            <ProjectCard key={project.title} project={project} variants={itemVariants} />
+            <ProjectCard key={project.title} project={project as Project} variants={itemVariants} />
           ))}
         </div>
       </div>
@@ -66,51 +75,50 @@ export const ProjectsSection = () => {
   );
 };
 
-const ProjectCard = ({ project, variants }: { project: any; variants: Variants }) => {
-  const cardRef = React.useRef<HTMLDivElement>(null);
+const ProjectCard = ({ project, variants }: { project: Project; variants: Variants }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useTransform(y, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-10, 10]);
+
+  const springConfig = { stiffness: 150, damping: 15 };
+  const rotateXSpring = useSpring(rotateX, springConfig);
+  const rotateYSpring = useSpring(rotateY, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-    
-    gsap.to(card, {
-      rotateX: rotateX,
-      rotateY: rotateY,
-      duration: 0.3,
-      ease: 'power2.out',
-      transformPerspective: 1000
-    });
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    // Calculate normalized position (-0.5 to 0.5)
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = (mouseX / width) - 0.5;
+    const yPct = (mouseY / height) - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
   };
 
   const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    
-    gsap.to(cardRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    });
+    x.set(0);
+    y.set(0);
   };
 
   return (
     <motion.article
-      ref={cardRef}
       className={`retro-terminal p-6 sm:p-8 group ${project.featured ? 'border-4 border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]' : ''}`}
       variants={variants}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{
+        transformStyle: 'preserve-3d',
+        rotateX: rotateXSpring,
+        rotateY: rotateYSpring,
+        transformPerspective: 1000
+      }}
     >
       {project.featured && (
         <div className="mb-4 flex items-center gap-2">
