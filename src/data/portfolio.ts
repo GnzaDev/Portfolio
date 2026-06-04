@@ -112,6 +112,26 @@ export const projects = [
     status: "ACTIVO",
     repo: "https://github.com/GnzaDev/StreamBotDiscord"
   },
+  {
+    title: "RestioAP",
+    description: "Sistema web moderno de carta digital y gestión de pedidos para restaurantes mediante códigos QR. Los clientes escanean, exploran el menú, personalizan productos y piden desde su móvil. El staff administra comandas, mesas y cocina en tiempo real desde un panel web. Proyecto académico — INACAP.",
+    tech: ["Next.js", "Supabase", "Tailwind CSS", "TypeScript", "Cloudflare"],
+    status: "ACADEMIC",
+    demo: "https://restioapp.gnza.me/"
+  },
+  {
+    title: "DimePiola",
+    description: "Plataforma de mensajes anónimos transformados por IA. Los usuarios reciben confesiones de su audiencia y generan imágenes espectaculares para Instagram y WhatsApp. Incluye filtro anti-hate con IA, 6 plantillas Pro, y acceso seguro con PIN.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "Groq AI", "Framer Motion"],
+    status: "ACTIVO",
+    demo: "https://dimepiola.com"
+  },
+  {
+    title: "KeysBot",
+    description: "Plataforma SaaS para que dueños de tiendas de licencias digitales (Windows, Office) configuren y gestionen su propio bot de WhatsApp sin tocar código. Dashboard con React, webhooks y pagos integrados.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "InsForge", "Stripe"],
+    status: "PRIVATE"
+  },
 ];
 
 // Actualmente aprendiendo
