@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { useLenis } from './hooks/useLenis';
+import { useKeyboardNav } from './hooks/useKeyboardNav';
 
 // Registrar plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, SplitText, ScrollToPlugin);
@@ -100,6 +102,9 @@ const GridRetroBackground = () => {
 function App() {
   const [isLoading, setIsLoading] = React.useState(true);
 
+  useLenis();
+  useKeyboardNav();
+
   // Simulación de carga inicial
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -144,7 +149,7 @@ function App() {
         {/* Footer */}
         <footer className="py-6 md:py-8 text-center text-gray-500 text-xs sm:text-sm px-4" role="contentinfo">
           <p>Desarrollado por Gonzalo Bustamante © {new Date().getFullYear()}</p>
-          <p className="mt-2 text-xs text-gray-400">Ingeniero en Computación | Chile</p>
+          <p className="mt-2 text-xs text-gray-400">Ingeniería en Informática, INACAP | Chile</p>
         </footer>
       </main>
     </div>

@@ -1,72 +1,30 @@
-import { motion, Variants } from 'framer-motion';
 import { GraduationCap, Briefcase } from 'lucide-react';
 import { education, experience } from '../data/portfolio';
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const itemVariants: Variants = {
-  hidden: { 
-    y: 50, 
-    opacity: 0,
-    scale: 0.95,
-    filter: 'blur(8px)'
-  },
-  visible: {
-    y: 0,
-    opacity: 1,
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: {
-      type: 'spring' as const,
-      stiffness: 80,
-      damping: 12,
-      duration: 0.8
-    }
-  }
-};
+import { useRevealAnimation } from '../hooks/useRevealAnimation';
+import { ScrambleText } from '../components';
 
 export const ExperienceSection = () => {
+  const sectionRef = useRevealAnimation<HTMLElement>({ stagger: 0.08 });
+
   return (
-    <motion.section
+    <section
       id="experience"
+      ref={sectionRef}
       className="experience-section py-12 sm:py-16 md:py-20 px-4"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
-      variants={containerVariants}
       role="region"
       aria-labelledby="experience-title"
     >
       <div className="max-w-6xl mx-auto">
-        <motion.div variants={itemVariants} className="mb-10 sm:mb-12 md:mb-16">
+        <div className="reveal-item mb-10 sm:mb-12 md:mb-16">
           <h2 id="experience-title" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 text-center text-gray-900 tracking-wider">
-            EXPERIENCIA.LOG
+            <ScrambleText text="EXPERIENCIA.LOG" scrambleSpeed={1.5} />
           </h2>
-          <motion.div
-            className="h-1 bg-gradient-to-r from-gray-800 to-gray-600 max-w-xs mx-auto"
-            initial={{ width: 0 }}
-            whileInView={{ width: "100%" }}
-            transition={{ duration: 1 }}
-            aria-hidden="true"
-          />
-        </motion.div>
+          <div className="h-1 bg-gradient-to-r from-gray-800 to-gray-600 max-w-xs mx-auto" aria-hidden="true" />
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          {/* Educación */}
-          <motion.div
-            className="retro-terminal p-6 sm:p-8"
-            variants={itemVariants}
-            whileHover={{ scale: 1.015, y: -2 }}
-            transition={{ type: 'spring', stiffness: 180, damping: 20 }}
+          <div
+            className="reveal-item retro-terminal p-6 sm:p-8 hover-lift"
           >
             <div className="flex items-center mb-4 md:mb-6 text-gray-700">
               <GraduationCap className="mr-2 md:mr-3" size={24} aria-hidden="true" />
@@ -87,14 +45,10 @@ export const ExperienceSection = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Experiencia */}
-          <motion.div
-            className="retro-terminal p-6 sm:p-8"
-            variants={itemVariants}
-            whileHover={{ scale: 1.015, y: -2 }}
-            transition={{ type: 'spring', stiffness: 180, damping: 20 }}
+          <div
+            className="reveal-item retro-terminal p-6 sm:p-8 hover-lift"
           >
             <div className="flex items-center mb-4 md:mb-6 text-gray-700">
               <Briefcase className="mr-2 md:mr-3" size={24} aria-hidden="true" />
@@ -117,9 +71,9 @@ export const ExperienceSection = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 };

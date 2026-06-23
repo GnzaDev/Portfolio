@@ -29,7 +29,7 @@ export const ScrambleText = ({ text, className = "", scrambleSpeed = 1 }: Scramb
                 scrollTrigger: {
                     trigger: element,
                     start: "top 85%",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none none"
                 },
                 onUpdate: () => {
                     const progress = anim.val;

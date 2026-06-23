@@ -1,43 +1,50 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { ChevronUp } from 'lucide-react';
 
 export const ScrollToTop = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    const btn = btnRef.current;
+    if (!btn) return;
+
+    gsap.set(btn, { scale: 0, opacity: 0 });
+
     const handleScroll = () => {
-      setIsVisible(window.scrollY > 400);
+      if (window.scrollY > 400) {
+        gsap.to(btn, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.3,
+          ease: 'cubic-bezier(0.32, 0.72, 0, 1)',
+        });
+      } else {
+        gsap.to(btn, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.2,
+          ease: 'cubic-bezier(0.32, 0.72, 0, 1)',
+        });
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ scale: 0, rotate: -180, opacity: 0 }}
-          animate={{ scale: 1, rotate: 0, opacity: 1 }}
-          exit={{ scale: 0, rotate: 180, opacity: 0 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gray-900 text-white border-4 border-gray-700 shadow-lg hover:bg-gray-800 hover:border-gray-600 transition-colors flex items-center justify-center group"
-          aria-label="Volver arriba"
-        >
-          <ChevronUp size={24} className="group-hover:animate-bounce" aria-hidden="true" />
-        </motion.button>
-      )}
-    </AnimatePresence>
+    <button
+      ref={btnRef}
+      onClick={scrollToTop}
+      className="fixed bottom-8 right-8 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gray-900 text-white border-4 border-gray-700 shadow-lg hover:bg-gray-800 hover:border-gray-600 transition-colors flex items-center justify-center"
+      aria-label="Volver arriba"
+    >
+      <ChevronUp size={24} aria-hidden="true" />
+    </button>
   );
 };

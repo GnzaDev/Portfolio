@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 
 interface MagneticButtonProps {
     children: React.ReactNode;
@@ -9,39 +9,48 @@ interface MagneticButtonProps {
 
 export const MagneticButton = ({ children, className = "", onClick }: MagneticButtonProps) => {
     const ref = useRef<HTMLButtonElement>(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
 
-    const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const { clientX, clientY } = e;
-        const rect = ref.current?.getBoundingClientRect();
+    useEffect(() => {
+      const btn = ref.current;
+      if (!btn) return;
 
-        if (rect) {
-            const { width, height, left, top } = rect;
-            const middleX = clientX - (left + width / 2);
-            const middleY = clientY - (top + height / 2);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reducedMotion) return;
 
-            // Ajusta la fuerza del imán aquí (0.1 = débil, 0.5 = fuerte)
-            setPosition({ x: middleX * 0.3, y: middleY * 0.3 });
-        }
-    };
+      const handleMouse = (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
 
-    const reset = () => {
-        setPosition({ x: 0, y: 0 });
-    };
+        gsap.to(btn, {
+          x, y,
+          duration: 0.4,
+          ease: 'cubic-bezier(0.32, 0.72, 0, 1)',
+          overwrite: 'auto',
+        });
+      };
 
-    const { x, y } = position;
+      const reset = () => {
+        gsap.to(btn, {
+          x: 0,
+          y: 0,
+          duration: 0.6,
+          ease: 'cubic-bezier(0.32, 0.72, 0, 1)',
+        });
+      };
+
+      btn.addEventListener('mousemove', handleMouse);
+      btn.addEventListener('mouseleave', reset);
+
+      return () => {
+        btn.removeEventListener('mousemove', handleMouse);
+        btn.removeEventListener('mouseleave', reset);
+      };
+    }, []);
 
     return (
-        <motion.button
-            ref={ref}
-            className={className}
-            onClick={onClick}
-            onMouseMove={handleMouse}
-            onMouseLeave={reset}
-            animate={{ x, y }}
-            transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-        >
+        <button ref={ref} className={className} onClick={onClick} type="button">
             {children}
-        </motion.button>
+        </button>
     );
 };

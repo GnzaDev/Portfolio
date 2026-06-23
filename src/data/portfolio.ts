@@ -2,47 +2,50 @@
 
 export const personalInfo = {
   name: "GONZALO",
-  title: "ESTUDIANTE DE INGENIERÍA INFORMÁTICA",
-  subtitle: "DESARROLLADOR DE SOFTWARE",
+  title: "DESARROLLADOR DE SOFTWARE",
+  subtitle: "Estudiante de Ingeniería en Informática — INACAP",
   tagline: "Construyendo el futuro, una línea de código a la vez",
   email: "bustamantegonzalo208@gmail.com",
   github: "https://github.com/GnzaDev",
   githubUsername: "@GnzaDev",
+  linkedin: "https://linkedin.com/in/gonzalo-bustamante",
   location: "Chile"
 };
 
 export const about = {
   description: `Egresado de Técnico Analista Programador (2023-2024).
-Actualmente cursando 4° año de Ingeniería Informática en INACAP.
-Apasionado por el desarrollo Frontend y las tecnologías modernas.
-Explorando React Native y Expo para aplicaciones móviles.
-Aprendiendo desarrollo Backend para ser un desarrollador full-stack.
-Me encanta crear interfaces limpias y funcionales con Bootstrap, Tailwind y Next.js.
-Abierto a nuevas oportunidades y retos.`,
+Actualmente cursando 4° año de Ingeniería en Informática en INACAP.
+Especializado en frontend con React, Next.js y TypeScript.
+Expandiendo a full-stack y mobile con React Native y Expo.
+Abierto a nuevas oportunidades y desafíos.`,
   status: "SIEMPRE APRENDIENDO"
 };
 
 
 export const stats = [
-  { label: "DEVELOPMENT", value: "1+ YEARS" },
-  { label: "DATABASES", value: "SQL/NOSQL" },
-  { label: "WEB STACK", value: "FULL STACK" },
-  { label: "DEVOPS", value: "CI/CD" }
+  { label: "PROYECTOS", value: "7+ EN PRODUCCIÓN" },
+  { label: "STACK", value: "REACT/NEXT.JS" },
+  { label: "FRONTEND", value: "3+ AÑOS" },
+  { label: "UBICACIÓN", value: "CHILE" }
 ];
 
 export const skills = [
   {
     category: "Front-End",
-    skills: ["HTML5", "CSS", "JavaScript", "React", "Next.js", "Tailwind CSS", "Bootstrap"]
+    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5", "CSS3", "GSAP", "Framer Motion"]
   },
   {
     category: "Back-End",
-    skills: ["Firebase", "Supabase", "Node.js", "Python"]
+    skills: ["Node.js", "Firebase", "Supabase", "InsForge", "Drizzle ORM", "PostgreSQL", "APIs REST"]
   },
   {
     category: "Mobile",
     skills: ["React Native", "Expo"]
   },
+  {
+    category: "Herramientas",
+    skills: ["Git/GitHub", "Vercel", "Cloudflare Workers", "Stripe/Mercado Pago", "Figma"]
+  }
 ];
 
 
@@ -54,7 +57,7 @@ export const education = [
     description: "Formación en programación, fundamentos de software y bases de datos."
   },
   {
-    degree: "Ingeniería Informática (En curso — 3° año)",
+    degree: "Ingeniería en Informática (En curso — 4° año)",
     institution: "Instituto Profesional INACAP",
     period: "2024 - Presente",
     description:
@@ -80,6 +83,13 @@ export const experience = [
 
 
 export const projects = [
+  {
+    title: "GnzaSync",
+    description: "Herramienta profesional de traducción universal en tiempo real para PC, optimizada para transmisiones en vivo. Incorpora motor IA en Python, captura de sistema (Loopback), VAD, e IA local (Faster-Whisper) totalmente offline. Interfaz Glassmorphism moderna (React + Tauri) con overlay dinámico (PIP) y atajos globales.",
+    tech: ["Python", "React", "Tauri", "Faster-Whisper"],
+    status: "ACTIVO",
+    featured: true
+  },
   {
     title: "DondeComerBAES",
     description: "Mi primer proyecto personal lanzado para todos. Plataforma web para encontrar locales que aceptan la tarjeta BAES (beneficio de alimentación) en Chile. Incluye mapa interactivo, buscador, filtros y datos actualizados de comercios reales.",
@@ -155,11 +165,10 @@ export const interests = [
 // Logros o certificaciones (opcional)
 export const achievements = [
   {
-    title: "Título Profesional",
-    description: "Ingeniero en Computación",
+    title: "Título Técnico",
+    description: "Técnico Analista Programador, INACAP",
     year: "2024"
   }
-  // Agrega más certificaciones aquí
 ];
 
 // Servicios que ofreces (opcional)
@@ -195,16 +204,16 @@ export const testimonials = [
 // Redes sociales adicionales (opcional)
 export const socialLinks = {
   github: "https://github.com/GnzaDev",
-  linkedin: "", // Agrega tu LinkedIn
-  twitter: "",  // Agrega tu Twitter/X
-  portfolio: "", // Otro portfolio si tienes
-  blog: "" // Blog personal si tienes
+  linkedin: "https://linkedin.com/in/gonzalo-bustamante",
+  twitter: "",
+  portfolio: "https://portfolio.gnza.me",
+  blog: ""
 };
 
 export const navLinks = [
-  { href: '#about', label: 'ABOUT' },
-  { href: '#skills', label: 'SKILLS' },
-  { href: '#experience', label: 'EXPERIENCE' },
-  { href: '#projects', label: 'PROJECTS' },
-  { href: '#contact', label: 'CONTACT' },
+  { href: '#about', label: 'SOBRE MÍ' },
+  { href: '#skills', label: 'HABILIDADES' },
+  { href: '#experience', label: 'EXPERIENCIA' },
+  { href: '#projects', label: 'PROYECTOS' },
+  { href: '#contact', label: 'CONTACTO' },
 ];
