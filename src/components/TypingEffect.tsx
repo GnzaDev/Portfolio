@@ -1,39 +1,43 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import React, { useEffect, useState } from 'react';
 
 interface TypingEffectProps {
   text: string;
-  delay?: number;
+  speed?: number;
+  className?: string;
+  onComplete?: () => void;
+  showCursor?: boolean;
 }
 
-export const TypingEffect = ({ text, delay = 0 }: TypingEffectProps) => {
-  const textRef = useRef<HTMLSpanElement>(null);
+export const TypingEffect: React.FC<TypingEffectProps> = ({
+  text,
+  speed = 50,
+  className = '',
+  onComplete,
+  showCursor = false,
+}) => {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (textRef.current) {
-        const chars = text.split('');
-        textRef.current.innerHTML = '';
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    } else {
+      setIsComplete(true);
+      onComplete?.();
+    }
+  }, [currentIndex, text, speed, onComplete]);
 
-        chars.forEach((char) => {
-          const span = document.createElement('span');
-          span.textContent = char;
-          span.style.opacity = '0';
-          textRef.current?.appendChild(span);
-        });
-
-        gsap.to(textRef.current.children, {
-          opacity: 1,
-          duration: 0.05,
-          stagger: 0.05,
-          delay: delay,
-          ease: 'none'
-        });
-      }
-    });
-
-    return () => ctx.revert();
-  }, [text, delay]);
-
-  return <span ref={textRef} />;
+  return (
+    <span className={className}>
+      {displayText}
+      {showCursor && (
+        <span className={`inline-block w-[2px] h-[1em] bg-current ml-0.5 ${isComplete ? 'animate-pulse' : ''}`} />
+      )}
+    </span>
+  );
 };

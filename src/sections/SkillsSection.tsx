@@ -1,60 +1,102 @@
-import { Monitor, Cpu, HardDrive } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { skills } from '../data/portfolio';
-import { useRevealAnimation } from '../hooks/useRevealAnimation';
+import { TextReveal, FadeInView } from '../components';
 
-const iconMap: Record<string, React.ElementType> = {
-  'Front-End': Monitor,
-  'Back-End': Cpu,
-  'Mobile': HardDrive,
-  'Herramientas': Cpu,
-};
+export const SkillsSection: React.FC = () => {
+  const marqueeRef1 = useRef<HTMLDivElement>(null);
+  const marqueeRef2 = useRef<HTMLDivElement>(null);
 
-export const SkillsSection = () => {
-  const sectionRef = useRevealAnimation<HTMLElement>({ stagger: 0.08 });
+  // Get all skills flat
+  const allSkills = skills.flatMap(cat => cat.skills);
+  const half = Math.ceil(allSkills.length / 2);
+  const row1 = allSkills.slice(0, half);
+  const row2 = allSkills.slice(half);
+
+  // Speed variation based on scroll
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (marqueeRef1.current) {
+        gsap.to(marqueeRef1.current, {
+          x: '-=200',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: marqueeRef1.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 2,
+          },
+        });
+      }
+      if (marqueeRef2.current) {
+        gsap.to(marqueeRef2.current, {
+          x: '+=200',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: marqueeRef2.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 2,
+          },
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, []);
+
+  const renderMarqueeRow = (items: string[], ref: React.RefObject<HTMLDivElement | null>, reverse?: boolean) => (
+    <div className="overflow-hidden py-4">
+      <div
+        ref={ref}
+        className={`marquee-track ${reverse ? 'marquee-track-reverse' : ''}`}
+      >
+        {/* Duplicate for seamless loop */}
+        {[...items, ...items].map((skill, i) => (
+          <React.Fragment key={i}>
+            <span className="marquee-item">{skill}</span>
+            {i < items.length * 2 - 1 && <span className="marquee-separator">•</span>}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <section
-      id="skills"
-      ref={sectionRef}
-      className="skills-section py-12 sm:py-16 md:py-20 px-4"
-      role="region"
-      aria-labelledby="skills-title"
-    >
-      <div className="max-w-6xl mx-auto">
-        <h2
-          id="skills-title"
-          className="reveal-item text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-10 sm:mb-12 md:mb-16 text-center text-gray-900 tracking-wider"
-        >
-          HABILIDADES
-        </h2>
+    <section id="skills" className="py-32 md:py-40">
+      {/* Section header */}
+      <div className="px-8 md:px-16 lg:px-24 mb-16">
+        <div className="max-w-6xl mx-auto flex items-start gap-6 md:gap-12">
+          <span className="font-mono text-sm text-[var(--text-muted)] shrink-0 mt-2">02</span>
+          <TextReveal as="h2" className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-[var(--text)] tracking-tight">
+            HABILIDADES
+          </TextReveal>
+        </div>
+      </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {skills.map((category) => {
-            const Icon = iconMap[category.category] || Monitor;
-            return (
-              <div
-                key={category.category}
-                className="reveal-item retro-terminal p-6 sm:p-8 hover-lift"
-              >
-                <div className="flex items-center mb-4 md:mb-6">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-900 flex items-center justify-center mr-3 sm:mr-4">
-                    <Icon className="text-white" size={18} />
-                  </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
-                    {category.category}
-                  </h3>
-                </div>
-                <ul className="space-y-2 md:space-y-3" role="list">
+      {/* Marquee rows - full width */}
+      {renderMarqueeRow(row1, marqueeRef1)}
+      {renderMarqueeRow(row2, marqueeRef2, true)}
+
+      {/* Skill categories below */}
+      <div className="px-8 md:px-16 lg:px-24 mt-20">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {skills.map((category, i) => (
+            <FadeInView key={category.category} delay={i * 0.1}>
+              <div>
+                <h3 className="font-mono text-xs text-[var(--text-muted)] tracking-widest uppercase mb-4">
+                  {category.category}
+                </h3>
+                <ul className="space-y-2">
                   {category.skills.map((skill) => (
-                    <li key={skill} className="flex items-center">
-                      <div className="w-2 h-2 bg-gray-800 mr-2 md:mr-3 rounded-full flex-shrink-0" aria-hidden="true" />
-                      <span className="text-sm sm:text-base text-gray-700 font-medium">{skill}</span>
+                    <li key={skill} className="font-body text-sm text-[var(--text-secondary)] hover:text-[var(--text)] transition-colors">
+                      {skill}
                     </li>
                   ))}
                 </ul>
               </div>
-            );
-          })}
+            </FadeInView>
+          ))}
         </div>
       </div>
     </section>

@@ -1,68 +1,86 @@
-import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 
 interface ScrambleTextProps {
-    text: string;
-    className?: string;
-    scrambleSpeed?: number;
+  text: string;
+  className?: string;
+  speed?: number;
+  triggerOnHover?: boolean;
 }
 
-export const ScrambleText = ({ text, className = "", scrambleSpeed = 1 }: ScrambleTextProps) => {
-    const elementRef = useRef<HTMLSpanElement>(null);
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=[]{}|;:,.<>?/~0123456789";
+const CHARS = '—./+*_=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const element = elementRef.current;
-            if (!element) return;
+export const ScrambleText: React.FC<ScrambleTextProps> = ({
+  text,
+  className = '',
+  speed = 30,
+  triggerOnHover = false,
+}) => {
+  const [displayText, setDisplayText] = useState(text);
+  const [hasTriggered, setHasTriggered] = useState(false);
+  const elementRef = useRef<HTMLSpanElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-            // Objeto dummy para animar el valor 'val' de 0 a 1
-            const anim = { val: 0 };
+  const scramble = useCallback(() => {
+    let iteration = 0;
+    const totalLength = text.length;
 
-            gsap.to(anim, {
-                val: 1,
-                duration: 1.5 / scrambleSpeed,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 85%",
-                    toggleActions: "play none none none"
-                },
-                onUpdate: () => {
-                    const progress = anim.val;
-                    const length = text.length;
-                    const revealedLength = Math.floor(length * progress);
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
-                    // Parte revelada del texto original
-                    let result = text.substring(0, revealedLength);
+    intervalRef.current = setInterval(() => {
+      setDisplayText(
+        text.split('').map((char, index) => {
+          if (char === ' ') return ' ';
+          if (index < iteration) return text[index];
+          return CHARS[Math.floor(Math.random() * CHARS.length)];
+        }).join('')
+      );
 
-                    // Parte ofuscada con caracteres aleatorios
-                    for (let i = revealedLength; i < length; i++) {
-                        if (text[i] === ' ') {
-                            result += ' ';
-                        } else {
-                            result += chars[Math.floor(Math.random() * chars.length)];
-                        }
-                    }
+      iteration += 1 / 3;
 
-                    element.innerText = result;
-                },
-                onComplete: () => {
-                    // Asegurar que el texto final sea exactamente el original
-                    element.innerText = text;
-                }
-            });
-        });
+      if (iteration >= totalLength) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setDisplayText(text);
+      }
+    }, speed);
+  }, [text, speed]);
 
-        return () => ctx.revert();
-    }, [text, scrambleSpeed]);
+  // Scroll-trigger based initial scramble
+  useEffect(() => {
+    if (triggerOnHover || hasTriggered) return;
 
-    return (
-        <span ref={elementRef} className={className}>
-            {text}
-        </span>
+    const el = elementRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          scramble();
+          setHasTriggered(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
     );
+
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [scramble, triggerOnHover, hasTriggered]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (triggerOnHover) scramble();
+  }, [triggerOnHover, scramble]);
+
+  return (
+    <span
+      ref={elementRef}
+      className={className}
+      onMouseEnter={handleMouseEnter}
+    >
+      {displayText}
+    </span>
+  );
 };

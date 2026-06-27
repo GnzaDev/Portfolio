@@ -1,76 +1,87 @@
-import { GraduationCap, Briefcase } from 'lucide-react';
-import { education, experience } from '../data/portfolio';
-import { useRevealAnimation } from '../hooks/useRevealAnimation';
-import { ScrambleText } from '../components';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { experience, education } from '../data/portfolio';
+import { TextReveal, FadeInView } from '../components';
 
-export const ExperienceSection = () => {
-  const sectionRef = useRevealAnimation<HTMLElement>({ stagger: 0.08 });
+export const ExperienceSection: React.FC = () => {
+  const timelineLineRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!timelineLineRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.from(timelineLineRef.current!, {
+        scaleY: 0,
+        transformOrigin: 'top',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: timelineLineRef.current!,
+          start: 'top 80%',
+          end: 'bottom 30%',
+          scrub: 1,
+        },
+      });
+    });
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section
-      id="experience"
-      ref={sectionRef}
-      className="experience-section py-12 sm:py-16 md:py-20 px-4"
-      role="region"
-      aria-labelledby="experience-title"
-    >
+    <section id="experience" className="py-32 md:py-40 px-8 md:px-16 lg:px-24">
       <div className="max-w-6xl mx-auto">
-        <div className="reveal-item mb-10 sm:mb-12 md:mb-16">
-          <h2 id="experience-title" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 text-center text-gray-900 tracking-wider">
-            <ScrambleText text="EXPERIENCIA.LOG" scrambleSpeed={1.5} />
-          </h2>
-          <div className="h-1 bg-gradient-to-r from-gray-800 to-gray-600 max-w-xs mx-auto" aria-hidden="true" />
+        {/* Section header */}
+        <div className="flex items-start gap-6 md:gap-12 mb-16">
+          <span className="font-mono text-sm text-[var(--text-muted)] shrink-0 mt-2">03</span>
+          <TextReveal as="h2" className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-[var(--text)] tracking-tight">
+            EXPERIENCIA
+          </TextReveal>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+        <div className="section-divider mb-20" />
+
+        {/* Timeline */}
+        <div className="relative">
+          {/* Animated vertical line */}
           <div
-            className="reveal-item retro-terminal p-6 sm:p-8 hover-lift"
-          >
-            <div className="flex items-center mb-4 md:mb-6 text-gray-700">
-              <GraduationCap className="mr-2 md:mr-3" size={24} aria-hidden="true" />
-              <h3 className="text-xl sm:text-2xl font-bold">EDUCACIÓN</h3>
-            </div>
+            ref={timelineLineRef}
+            className="absolute left-0 md:left-8 top-0 bottom-0 w-[1px] bg-[var(--border-hover)]"
+          />
 
-            <div className="space-y-4 md:space-y-6">
-              {education.map((edu, index) => (
-                <div key={index} className="border-l-4 border-gray-800 pl-4">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2">
-                    {edu.degree}
-                  </h4>
-                  <p className="text-sm sm:text-base text-gray-600 mb-1">{edu.institution}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">{edu.period}</p>
-                  <p className="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 leading-relaxed">
-                    {edu.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="reveal-item retro-terminal p-6 sm:p-8 hover-lift"
-          >
-            <div className="flex items-center mb-4 md:mb-6 text-gray-700">
-              <Briefcase className="mr-2 md:mr-3" size={24} aria-hidden="true" />
-              <h3 className="text-xl sm:text-2xl font-bold">EXPERIENCIA</h3>
-            </div>
-
-            <div className="space-y-4 md:space-y-6">
-              {experience.map((exp, index) => (
-                <div key={index} className="border-l-4 border-gray-800 pl-4">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2">
-                    {exp.position}
-                  </h4>
-                  <p className="text-sm sm:text-base text-gray-600 mb-1">{exp.company}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">{exp.period}</p>
-                  <ul className="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 space-y-1 sm:space-y-2 list-disc list-inside">
-                    {exp.responsibilities.map((resp, idx) => (
-                      <li key={idx}>{resp}</li>
+          {/* Experience items */}
+          <div className="space-y-16 md:space-y-20">
+            {experience.map((exp, i) => (
+              <FadeInView key={i} direction="left" delay={i * 0.15}>
+                <div className="pl-8 md:pl-20 relative">
+                  {/* Dot on timeline */}
+                  <div className="absolute left-0 md:left-8 top-2 w-2 h-2 rounded-full bg-[var(--text)] -translate-x-[3.5px]" />
+                  
+                  <span className="font-mono text-xs text-[var(--text-muted)] tracking-wider">{exp.period}</span>
+                  <h3 className="font-heading text-xl md:text-2xl font-bold text-[var(--text)] mt-2">{exp.position}</h3>
+                  <p className="font-body text-sm text-[var(--text-secondary)] mt-1">{exp.company}</p>
+                  <ul className="mt-4 space-y-2">
+                    {exp.responsibilities.map((resp, j) => (
+                      <li key={j} className="font-body text-sm text-[var(--text-secondary)] flex items-start gap-3">
+                        <span className="text-[var(--text-muted)] mt-1.5 text-[8px]">▸</span>
+                        {resp}
+                      </li>
                     ))}
                   </ul>
                 </div>
-              ))}
-            </div>
+              </FadeInView>
+            ))}
+
+            {/* Education */}
+            {education.map((edu, i) => (
+              <FadeInView key={`edu-${i}`} direction="left" delay={(experience.length + i) * 0.15}>
+                <div className="pl-8 md:pl-20 relative">
+                  <div className="absolute left-0 md:left-8 top-2 w-2 h-2 rounded-full bg-[var(--text-muted)] -translate-x-[3.5px]" />
+                  
+                  <span className="font-mono text-xs text-[var(--text-muted)] tracking-wider">{edu.period}</span>
+                  <h3 className="font-heading text-xl md:text-2xl font-bold text-[var(--text)] mt-2">{edu.degree}</h3>
+                  <p className="font-body text-sm text-[var(--text-secondary)] mt-1">{edu.institution}</p>
+                  <p className="font-body text-sm text-[var(--text-secondary)] mt-3">{edu.description}</p>
+                </div>
+              </FadeInView>
+            ))}
           </div>
         </div>
       </div>

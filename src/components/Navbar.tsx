@@ -1,135 +1,134 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
-import { Terminal, Menu, X } from 'lucide-react';
-import { navLinks, personalInfo } from '../data/portfolio';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { navLinks } from '../data/portfolio';
 
-export const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const navRef = useRef<HTMLElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+export const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const progressFillRef = useRef<HTMLDivElement>(null);
 
+  // Setup scroll progress
   useEffect(() => {
+    if (!progressFillRef.current) return;
     const ctx = gsap.context(() => {
-      if (navRef.current) {
-        gsap.fromTo(
-          navRef.current,
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 2 }
-        );
-      }
+      gsap.to(progressFillRef.current, {
+        scaleY: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.3,
+        }
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  // Setup open/close timeline
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    const links = linksRef.current.filter(Boolean);
+    if (!overlay || links.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.to(overlay, {
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        duration: 0.8,
+        ease: 'power4.inOut',
+      });
+      
+      tl.fromTo(links, 
+        { y: 100, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.08,
+          duration: 0.6,
+          ease: 'power3.out',
+        }, 
+        '-=0.3'
+      );
+
+      timelineRef.current = tl;
     });
 
     return () => ctx.revert();
   }, []);
 
+  // Play/reverse on isOpen change  
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (menuRef.current) {
-        if (isOpen) {
-          gsap.fromTo(
-            menuRef.current,
-            { height: 0, opacity: 0 },
-            { height: 'auto', opacity: 1, duration: 0.4, ease: 'power2.out' }
-          );
-        } else {
-          gsap.to(menuRef.current, { height: 0, opacity: 0, duration: 0.3, ease: 'power2.in' });
-        }
-      }
-    });
-
-    return () => ctx.revert();
+    if (!timelineRef.current) return;
+    if (isOpen) {
+      timelineRef.current.play();
+      document.body.style.overflow = 'hidden';
+    } else {
+      timelineRef.current.reverse();
+      document.body.style.overflow = '';
+    }
   }, [isOpen]);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const handleLinkClick = useCallback((href: string) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: 'smooth'
-      });
-    }
-  };
+    setTimeout(() => {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 800);
+  }, []);
 
   return (
-    <nav
-      ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b-4 border-gray-700 shadow-2xl"
-      role="navigation"
-      aria-label="Navegación principal"
-      style={{ position: 'fixed' }}
-    >
-      <div className="absolute top-3 left-4 flex space-x-2 z-10">
-        <div className="w-3 h-3 rounded-full bg-red-500 border border-red-600" aria-hidden="true" />
-        <div className="w-3 h-3 rounded-full bg-yellow-500 border border-yellow-600" aria-hidden="true" />
-        <div className="w-3 h-3 rounded-full bg-green-500 border border-green-600" aria-hidden="true" />
+    <>
+      {/* Logo - fixed top left */}
+      <div className="fixed top-8 left-8 z-[201] mix-blend-difference">
+        <a href="#" className="font-mono text-sm text-white tracking-widest uppercase"
+           onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          GONZALO<span className="text-[var(--text-muted)] mx-1">.</span>DEV
+        </a>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16 pl-16 sm:pl-0">
-          <a
-            href="#main-content"
-            className="flex items-center space-x-2 text-white font-bold text-base sm:text-lg tracking-wider hover:text-gray-300 transition-colors group"
-            onClick={(e) => handleLinkClick(e, '#main-content')}
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 border-2 border-gray-600 flex items-center justify-center group-hover:border-gray-400 transition-colors">
-              <Terminal size={18} aria-hidden="true" />
-            </div>
-            <span className="hidden sm:inline">{'>'} {personalInfo.name}.DEV</span>
-            <span className="sm:hidden">{'>'} G.DEV</span>
-            <span
-              className="w-2 h-4 bg-white inline-block ml-1 animate-pulse"
-              aria-hidden="true"
-            />
-          </a>
+      {/* Hamburger */}
+      <button
+        className={`hamburger ${isOpen ? 'is-open' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+        aria-expanded={isOpen}
+      >
+        <span className="hamburger-line" />
+        <span className="hamburger-line" />
+        <span className="hamburger-line" />
+      </button>
 
-          <div className="hidden md:flex space-x-1">
-            {navLinks.map((link, index) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className="px-3 lg:px-4 py-2 text-xs lg:text-sm font-bold text-gray-300 bg-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-200 border-2 border-gray-700 hover:border-gray-900 ios-btn"
-              >
-                <span className="text-gray-500 group-hover:text-gray-900 mr-1">[{index + 1}]</span>
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-white bg-gray-800 hover:bg-gray-700 transition-colors border-2 border-gray-600 ios-btn"
-            aria-label="Abrir menú"
-            aria-expanded={isOpen}
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-
-        <div
-          ref={menuRef}
-          className="md:hidden overflow-hidden bg-gray-800"
-          style={{ height: 0, opacity: 0 }}
-        >
-          <div className="py-3 space-y-1 border-t-2 border-gray-700">
-            {navLinks.map((link, index) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className="block px-4 py-3 text-sm font-bold text-gray-300 hover:bg-white hover:text-gray-900 transition-all duration-200 border-l-4 border-transparent hover:border-gray-900"
-              >
-                <span className="text-gray-500 mr-2">{'>'}</span>
-                [{index + 1}] {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
+      {/* Nav Overlay */}
+      <div
+        ref={overlayRef}
+        className="nav-overlay"
+        style={{ clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)' }}
+      >
+        <nav className="nav-menu h-full flex flex-col justify-center px-8 md:px-16 lg:px-24">
+          {navLinks.map((link, i) => (
+            <a
+              key={link.href}
+              ref={el => { linksRef.current[i] = el; }}
+              href={link.href}
+              className="nav-link"
+              onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
+            >
+              <span className="nav-link-number">{String(i + 1).padStart(2, '0')}</span>
+              {link.label}
+            </a>
+          ))}
+        </nav>
       </div>
-    </nav>
+
+      {/* Scroll Progress */}
+      <div className="scroll-progress">
+        <div ref={progressFillRef} className="scroll-progress-fill h-full" />
+      </div>
+    </>
   );
 };

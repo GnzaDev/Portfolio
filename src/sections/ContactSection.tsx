@@ -1,88 +1,103 @@
-import { Mail, Github, Linkedin } from 'lucide-react';
-import { personalInfo, socialLinks } from '../data/portfolio';
-import { useState, useEffect } from 'react';
-import { useRevealAnimation } from '../hooks/useRevealAnimation';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import { personalInfo } from '../data/portfolio';
+import { MagneticButton, ScrambleText, FadeInView } from '../components';
 
-const ObfuscatedEmail = () => {
-  const [email, setEmail] = useState('');
+export const ContactSection: React.FC = () => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    const user = 'bustamantegonzalo208';
-    const domain = 'gmail';
-    const tld = 'com';
-    setEmail(`${user}@${domain}.${tld}`);
+    if (!titleRef.current) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const split = new SplitText(titleRef.current!, { type: 'chars' });
+      gsap.from(split.chars, {
+        y: 80,
+        opacity: 0,
+        rotateX: -60,
+        stagger: 0.04,
+        duration: 0.8,
+        ease: 'power4.out',
+        scrollTrigger: {
+          trigger: titleRef.current!,
+          start: 'top 80%',
+        },
+      });
+    });
+
+    return () => ctx.revert();
   }, []);
 
-  if (!email) {
-    return <span className="text-gray-600 text-xs sm:text-sm">Cargando...</span>;
-  }
-
   return (
-    <span className="text-gray-600 text-xs sm:text-sm">{email}</span>
-  );
-};
+    <section id="contact" className="py-32 md:py-48 px-8 md:px-16 lg:px-24">
+      <div className="max-w-6xl mx-auto">
+        {/* Section number */}
+        <span className="font-mono text-sm text-[var(--text-muted)] block mb-8">05</span>
 
-export const ContactSection = () => {
-  const sectionRef = useRevealAnimation<HTMLElement>({ stagger: 0.08 });
-
-  return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      className="connect-section py-12 sm:py-16 md:py-20 px-4"
-      role="region"
-      aria-labelledby="connect-title"
-    >
-      <div className="max-w-4xl mx-auto text-center">
+        {/* Big title */}
         <h2
-          id="connect-title"
-          className="reveal-item text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 text-gray-900 tracking-wider"
+          ref={titleRef}
+          className="font-heading text-[clamp(3rem,10vw,8rem)] font-black leading-[0.9] tracking-tighter text-[var(--text)] mb-12"
+          style={{ perspective: '1000px' }}
         >
-          CONNECT.BAT
+          HABLEMOS
         </h2>
 
-        <p className="reveal-item text-base sm:text-lg md:text-xl text-gray-700 mb-8 md:mb-12 px-4">
-          ¿Listo para colaborar? Construyamos algo extraordinario juntos.
-        </p>
+        {/* Description */}
+        <FadeInView delay={0.2}>
+          <p className="font-body text-lg md:text-xl text-[var(--text-secondary)] max-w-lg mb-12">
+            ¿Tienes un proyecto en mente? Estoy abierto a nuevas oportunidades y colaboraciones.
+          </p>
+        </FadeInView>
 
-        <div className="reveal-item flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-6 md:gap-8 max-w-3xl mx-auto">
-          <div
-            className="retro-card p-6 sm:p-8 flex-1 hover-lift"
-          >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-lg bg-gray-900 flex items-center justify-center" aria-hidden="true">
-              <Mail className="text-white" size={24} />
-            </div>
-            <span className="text-gray-900 font-bold text-base sm:text-lg block mb-1 sm:mb-2">EMAIL</span>
-            <ObfuscatedEmail />
+        {/* Email CTA */}
+        <FadeInView delay={0.3}>
+          <div className="mb-16">
+            <MagneticButton
+              href={`mailto:${personalInfo.email}`}
+              variant="outline"
+              className="px-8 py-4 text-sm"
+            >
+              ENVIAR EMAIL
+            </MagneticButton>
           </div>
+        </FadeInView>
 
-          <a
-            href={personalInfo.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="retro-card p-6 sm:p-8 flex-1 hover-lift"
-            aria-label="Visitar perfil de GitHub"
-          >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-lg bg-gray-900 flex items-center justify-center" aria-hidden="true">
-              <Github className="text-white" size={24} />
-            </div>
-            <span className="text-gray-900 font-bold text-base sm:text-lg block mb-1 sm:mb-2">GITHUB</span>
-            <span className="text-gray-600 text-xs sm:text-sm">{personalInfo.githubUsername}</span>
-          </a>
+        {/* Social links */}
+        <FadeInView delay={0.4}>
+          <div className="flex flex-col sm:flex-row gap-8 sm:gap-16">
+            <a
+              href={personalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group font-heading text-2xl md:text-3xl font-bold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+            >
+              <ScrambleText text="GitHub →" triggerOnHover />
+            </a>
+            <a
+              href={personalInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group font-heading text-2xl md:text-3xl font-bold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+            >
+              <ScrambleText text="LinkedIn →" triggerOnHover />
+            </a>
+          </div>
+        </FadeInView>
 
-          <a
-            href={socialLinks.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="retro-card p-6 sm:p-8 flex-1 hover-lift"
-            aria-label="Visitar perfil de LinkedIn"
-          >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-lg bg-gray-900 flex items-center justify-center" aria-hidden="true">
-              <Linkedin className="text-white" size={24} />
-            </div>
-            <span className="text-gray-900 font-bold text-base sm:text-lg block mb-1 sm:mb-2">LINKEDIN</span>
-            <span className="text-gray-600 text-xs sm:text-sm">Gonzalo Bustamante</span>
-          </a>
+        {/* Footer */}
+        <div className="section-divider mt-24 mb-8" />
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <p className="font-mono text-xs text-[var(--text-muted)]">
+            © {new Date().getFullYear()} Gonzalo Bustamante
+          </p>
+          <p className="font-mono text-xs text-[var(--text-muted)]">
+            Diseñado & Desarrollado con ♥
+          </p>
         </div>
       </div>
     </section>
