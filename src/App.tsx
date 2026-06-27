@@ -14,7 +14,9 @@ import {
   ScrollToTop, 
   LoadingSpinner, 
   SmoothScroll, 
-  BackgroundShader 
+  BackgroundShader,
+  ThemeToggle,
+  Cursor
 } from './components';
 
 import {
@@ -38,7 +40,6 @@ function App() {
       ScrollTrigger.refresh();
     }, 100);
   };
-
   useEffect(() => {
     const handleResize = () => {
       ScrollTrigger.refresh();
@@ -49,38 +50,39 @@ function App() {
 
   return (
     <SmoothScroll>
-      {/* Loading Screen */}
-      {isLoading && <LoadingSpinner onComplete={handleLoadingComplete} />}
+      <div className="relative text-[var(--text)] min-h-screen selection:bg-[var(--text)] selection:text-[var(--bg)]">
+        <BackgroundShader />
+        
+        {/* Loading Spinner manages its own GSAP exit animation then unmounts */}
+        {isLoading && <LoadingSpinner onComplete={() => setIsLoading(false)} />}
+        
+        {/* Content wrapper: hidden overflow while loading to prevent scrolling during split reveal */}
+        <div className={`portfolio-content w-full ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+          {/* Skip to main content */}
+          <a
+            href="#main-content"
+            className="fixed -top-20 left-4 z-[10000] bg-white text-black px-6 py-3 rounded-b-lg font-bold focus:top-4 transition-all duration-300 shadow-lg font-mono text-sm"
+          >
+            Saltar al contenido principal
+          </a>
 
-      {/* Skip to main content */}
-      <a
-        href="#main-content"
-        className="fixed -top-20 left-4 z-[10000] bg-white text-black px-6 py-3 rounded-b-lg font-bold focus:top-4 transition-all duration-300 shadow-lg font-mono text-sm"
-      >
-        Saltar al contenido principal
-      </a>
-
-      {/* Navigation */}
-      <Navbar />
-
-      {/* Background Shader */}
-      <BackgroundShader />
-
-      {/* Scroll to Top */}
-      <ScrollToTop />
-
-      {/* Noise texture overlay */}
-      <div className="noise-bg" />
-
-      {/* Main Content */}
-      <main id="main-content">
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <ContactSection />
-      </main>
+          <Navbar />
+          <ThemeToggle />
+          
+          {/* Main content has a solid background and margin-bottom to reveal the fixed footer */}
+          <main id="main-content" className="relative z-10 bg-[var(--bg)] mb-[100vh]">
+            <HeroSection />
+            <AboutSection />
+            <SkillsSection />
+            <ExperienceSection />
+            <ProjectsSection />
+          </main>
+          
+          <ContactSection />
+          
+          <ScrollToTop />
+        </div>
+      </div>
     </SmoothScroll>
   );
 }

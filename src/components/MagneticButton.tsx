@@ -98,10 +98,10 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-white text-black border border-white hover:text-white';
+        return 'bg-[var(--text)] text-[var(--bg)] border border-[var(--text)] hover:text-[var(--text)]';
       case 'outline':
       default:
-        return 'bg-transparent text-white border border-white/20 backdrop-blur-md hover:text-black';
+        return 'bg-transparent text-[var(--text)] border border-[var(--border-hover)] backdrop-blur-md hover:text-[var(--bg)]';
     }
   };
 
@@ -114,7 +114,7 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
       <span
         ref={fillRef}
         className={`absolute w-32 h-32 rounded-full pointer-events-none transform -translate-x-1/2 -translate-y-1/2 opacity-0 z-0 ${
-          variant === 'primary' ? 'bg-[#0a0a0a]' : 'bg-white'
+          variant === 'primary' ? 'bg-[var(--bg)]' : 'bg-[var(--text)]'
         }`}
       />
       {/* Text layer */}

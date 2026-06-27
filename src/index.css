@@ -18,6 +18,17 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+:root[data-theme="light"] {
+  --bg: #fafafa;
+  --bg-elevated: #ffffff;
+  --text: #0a0a0a;
+  --text-secondary: #444444;
+  --text-muted: #888888;
+  --accent: #000000;
+  --border: #e0e0e0;
+  --border-hover: #cccccc;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 0;
@@ -100,6 +111,13 @@ body {
     transform: scale(0.95);
   }
 
+  /* Experience Row Fluid CSS Hover */
+  .experience-track:hover .experience-row:not(:hover) {
+    filter: blur(3px);
+    opacity: 0.3;
+    transform: translateX(-10px);
+  }
+
   .project-card-wrapper:hover {
     transform: scale(1.02);
     z-index: 30;
@@ -144,7 +162,8 @@ body {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  background: var(--bg-elevated);
+  background: transparent;
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: 50%;
   padding: 0;
@@ -388,22 +407,14 @@ body {
   margin: 0;
 }
 
-/* Custom Scrollbar */
+/* --- Scrollbar & Cursor Hiding (Minimalism) --- */
 ::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-hover);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* Text Reveal (used by TextReveal component) */
@@ -490,4 +501,17 @@ a:focus-visible {
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* View Transitions for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
 }
